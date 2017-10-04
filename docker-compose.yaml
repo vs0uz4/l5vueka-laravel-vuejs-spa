@@ -1,0 +1,40 @@
+version: '2'
+
+volumes:
+  l5vueka-spa-config:
+    driver: local
+
+  l5vueka-spa-cache:
+    driver: local
+
+  l5vueka-spa-local:
+    driver: local
+
+  l5vueka-spa-yarn:
+    driver: local
+
+  l5vueka-spa-npm:
+    driver: local
+
+services:
+  dev:
+    image: ambientum/node:7
+    container_name: l5vueka-spa-dev
+    command: npm run dev
+    volumes:
+      - .:/var/www/app
+      - l5vueka-spa-config:/home/ambientum/.config
+      - l5vueka-spa-cache:/home/ambientum/.cache
+      - l5vueka-spa-local:/home/ambientum/.local
+      - l5vueka-spa-yarn:/home/ambientum/.yarn
+      - l5vueka-spa-npm:/home/ambientum/.npm
+    ports:
+      - "8080:8080"
+
+  production-server:
+    image: nginx:stable-alpine
+    container_name: l5vueka-spa-server
+    volumes:
+      - ./dist:/usr/share/nginx/html
+    ports:
+      - "9090:80"
